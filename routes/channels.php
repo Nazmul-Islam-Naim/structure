@@ -16,3 +16,14 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel("notification", function ($notification) {
+    dd(56);
+    return $notification;
+});
+
+Broadcast::channel("life", function ($notification) {
+    return $notification;
+});
+
+

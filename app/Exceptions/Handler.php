@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,7 +26,20 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            Log::error($e->getMessage());
         });
+    }
+
+    public function render($request, Throwable $exception) {
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'status' => 'Faild',
+                'code' => 422,
+                'message' => $exception->getMessage(),
+                'errors' => $exception->errors(),
+            ]);
+        }
+
+        return parent::render($request, $exception);
     }
 }
